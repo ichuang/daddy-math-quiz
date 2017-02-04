@@ -58,6 +58,8 @@ var make_game = function(name, opstr, opfunc, options){
     var nwrong = 0;
     var ndone = 0;
     var nproblems = 20;
+    var nattempts = 0;
+    var max_attempts = options.max_attempts || 3;
     var init_problem = function(){
 	if (options.initfunc){
 	    initdat = options.initfunc();
@@ -68,6 +70,7 @@ var make_game = function(name, opstr, opfunc, options){
 	    y = RandInt(options.min || 2, options.max || 14);
 	}
 	start_time = new Date().getTime() / 1000;
+	nattempts = 0;
     }
     init_problem();
     var time_interval = function(){
@@ -84,13 +87,22 @@ var make_game = function(name, opstr, opfunc, options){
     var check_result = function(response){
 	var expected = opfunc(x, y);
 	var ok = 0;
+	var retry = 0;
+	nattempts += 1;
 	if (response == expected){
 	    retstr = colored_string("Correct", "green");
 	    ncorrect += 1;
 	    ok = 1;
 	}else{
-	    retstr = colored_string("Wrong: " + problem_string() + " = " + String(expected), "red");
-	    nwrong += 1
+	    retstr = colored_string("Sorry, that's wrong\n", "red");
+	    if (nattempts >= max_attempts){
+		retstr += colored_string("You have run out of attempts\n", "white");
+		retstr += colored_string(problem_string() + " = " + String(expected), "red");
+		nwrong += 1
+	    }else{
+		retstr += colored_string("Please try again (" + String(max_attempts - nattempts) + " more attempts allowed)\n", "white");
+		retry = 1;
+	    }
 	}
 
 	stop_time = new Date().getTime() / 1000;
@@ -103,13 +115,16 @@ var make_game = function(name, opstr, opfunc, options){
 			   'response': response,
 			   'expected': expected,
 			   'ok': ok,
+			   'attempt': nattempts,
 			   'user': the_username.toLowerCase(),
 			  });
 	} catch(err){
 	}
 	
-	init_problem();
-	ndone += 1;
+	if (!retry){
+	    init_problem();
+	    ndone += 1;
+	}
 	update_stats_display(ncorrect, nwrong, ndone);
 
 	if (ndone==nproblems){
