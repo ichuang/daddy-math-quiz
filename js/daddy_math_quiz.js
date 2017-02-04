@@ -132,14 +132,14 @@ var make_game = function(name, opstr, opfunc, options){
     };
 }
 
-var mult_game = make_game('mult', "*", function(x,y){ return x*y; });
-var add_game = make_game('add', "+", function(x,y){ return x+y; });
-var sub_game = make_game('sub', "-", function(x,y){ return x-y; });
+var mult_game = make_game('mult', "*", function(x,y){ return x*y; }, {max: 12});
+var add_game = make_game('add', "+", function(x,y){ return x+y; }, {max: 100});
+var sub_game = make_game('sub', "-", function(x,y){ return x-y; }, {max: 100});
 var div_game = make_game('div', "/",
 			 function(x,y){ return x/y; },
 			 {initfunc: function(){
-			     var y = RandInt(2, 14);
-			     var ans = RandInt(2, 14);
+			     var y = RandInt(2, 12);
+			     var ans = RandInt(2, 12);
 			     var x = y*ans;
 			     return {x: x, y: y};
 			   }
