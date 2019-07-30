@@ -30,7 +30,10 @@ var clock = new FlipClock($('.clock'), 0, {
     clockFace: 'MinuteCounter'
 });
 
-$('#timer_block').css('left', $(window).width()-400)
+var set_clock_pos(){
+    $('#timer_block').css('left', $(window).width()-400);
+}
+set_clock_pos();
 
 var pause_timer = function(){
     clock.stop();
@@ -44,6 +47,10 @@ $('#pause-timer').click(function(){
 	clock.start();
 	$('#pause-timer').html("Pause");
     }
+});
+
+$(window).resize(function(){
+    set_clock_pos();
 });
 
 //-----------------------------------------------------------------------------
