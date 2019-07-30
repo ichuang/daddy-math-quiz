@@ -30,7 +30,7 @@ var clock = new FlipClock($('.clock'), 0, {
     clockFace: 'MinuteCounter'
 });
 
-var set_clock_pos(){
+var set_clock_pos = function(){
     $('#timer_block').css('left', $(window).width()-400);
 }
 set_clock_pos();
